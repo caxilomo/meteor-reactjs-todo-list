@@ -1,0 +1,25 @@
+---
+  - name: update apt packages
+    sudo: yes
+    apt: update_cache=yes cache_valid_time=3600
+
+  - name: install basic apt packages
+    sudo: yes
+    apt: pkg={{ item }} state=present
+    with_items:
+      - curl
+      - git
+      - build-essential
+      - vim
+
+  - name: setting locale
+    tags:
+      - base
+      - locale
+    raw: localedef -v -c -i es_ES -f UTF-8 es_ES.UTF-8
+    when: ansible_os_family == "Debian"
+    # CentOS
+    raw: localectl set-locale LANG=es_ES.utf8
+    when: ansible_os_family == "RedHat"
+    raw: localectl set-keymap es
+    when: ansible_os_family == "RedHat"

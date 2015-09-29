@@ -1,0 +1,16 @@
+---
+  - name: update apt-get
+    sudo: yes
+    apt: update_cache=yes cache_valid_time=3600
+
+  - name: install nginx
+    sudo: yes
+    apt: pkg=mongodb-server state=present
+
+  - name: update the MongoDB conf file
+    sudo: yes
+    template: src=mongodb.conf.j2 dest=/etc/mongodb.conf owner=root group=root
+
+  - name: ensure MongoDB is running
+    sudo: yes
+    service: name=mongodb state=started
